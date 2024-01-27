@@ -8,25 +8,23 @@
   <title>顺北广播电视总台</title>
 <link rel="stylesheet" href="https://unpkg.com/mdui@2.0.3/mdui.css">
 <script src="https://unpkg.com/mdui@2.0.3/mdui.global.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dplayer@1.27.1/dist/DPlayer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.7/dist/hls.min.js"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/mdui@2.0.3/mdui.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@2.0.3/mdui.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@2.0.3/mdui.min.css"><!--MDUI-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!--MD ICONS-->
+<script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script><!--FLV-->
+<script src="https://cdn.jsdelivr.net/npm/dplayer@1.27.1/dist/DPlayer.min.js"></script><!--DPLAYER-->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.7/dist/hls.min.js"></script><!--HLS-->
 	<style type="text/css">
-
-
 </style>
 	</head>
 <body>
-  <mdui-top-app-bar variant="small">
+  <mdui-top-app-bar variant="small" >
     <mdui-button-icon icon="live_tv" a href="https://live.chenbx.eu.org"></mdui-button-icon>
-    <mdui-top-app-bar-title>顺北广播电视总台</mdui-top-app-bar-title>
+    <mdui-top-app-bar-title>顺北广播电视总台<mdui-badge variant="large">Beta</mdui-badge>
+  </mdui-top-app-bar-title>
     <div style="flex-grow: 1"></div>
     <mdui-button-icon icon="home" a href="https://chenbx.eu.org"></mdui-button-icon>
   </mdui-top-app-bar>
-
 
  <div id="dplayer" class="dplayer" style="height: 500px; width: 100%"></div>
     <script class="dplayer">
@@ -74,3 +72,4 @@
         async>
 </script>
 </mdui-list>
+</body>
