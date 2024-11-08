@@ -1,68 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <link href="favicon.ico" rel="shortcut icon">
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="IE=edge" >
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="顺北广播电视总台，提供高质量的在线直播服务。">
+  <meta name="keywords" content="顺北广播电视, 在线直播, 高清视频">
   <title>顺北广播电视总台</title>
-<link rel="stylesheet" href="https://unpkg.com/mdui@2.0.3/mdui.css">
-<script src="https://unpkg.com/mdui@2.0.3/mdui.global.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mdui@2.0.3/mdui.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@2.0.3/mdui.min.css"><!--MDUI-->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><!--MD ICONS-->
-<script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script><!--FLV-->
-<script src="https://cdn.jsdelivr.net/npm/dplayer@1.27.1/dist/DPlayer.min.js"></script><!--DPLAYER-->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.7/dist/hls.min.js"></script><!--HLS-->
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-0-M/dplayer/1.26.0/DPlayer.min.js" type="application/javascript"></script>
-	<style type="text/css">
-</style>
-	</head>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/css/mdui.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      z-index: 1000; /* 确保顶栏始终在最上方 */
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-top: 56px; /* 顶栏高度 */
+    }
+    #mse {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      height: 70vh; /* 播放器高度占屏幕的70% */
+    }
+    .mdui-collapse {
+      margin-top: 10px; /* 给讨论区一些间距 */
+      flex: 1;
+      overflow-y: auto; /* 允许讨论区滚动 */
+    }
+    .discussion-container {
+      flex: 1;
+      overflow-y: auto; /* 允许讨论区滚动 */
+    }
+
+    /* 桌面版布局 */
+    @media (min-width: 768px) {
+      main {
+        flex-direction: column; /* 垂直布局 */
+      }
+      #mse {
+        height: 70vh; /* 播放器高度占屏幕的70% */
+      }
+      .mdui-collapse {
+        height: 30vh; /* 讨论区高度占屏幕的30% */
+      }
+    }
+
+    /* 移动版布局 */
+    @media (max-width: 767px) {
+      #mse {
+        height: 60vh; /* 小屏幕设备上播放器高度占屏幕的60% */
+      }
+      .mdui-collapse {
+        height: 40vh; /* 小屏幕设备上讨论区高度占屏幕的40% */
+      }
+    }
+  </style>
+</head>
 <body>
-  <mdui-top-app-bar variant="small" >
-    <mdui-button-icon icon="live_tv" a href="https://live.chenbx.eu.org"></mdui-button-icon>
-    <mdui-top-app-bar-title>顺北广播电视总台<mdui-badge variant="large">Beta</mdui-badge>
-  </mdui-top-app-bar-title>
-    <div style="flex-grow: 1"></div>
-    <mdui-button-icon icon="home" a href="https://chenbx.eu.org"></mdui-button-icon>
-  </mdui-top-app-bar>
-
- <div id="dplayer" class="dplayer" style="height: 500px; width: 100%"></div>
-    <script class="dplayer">
-  const dp = new DPlayer({
-    container: document.getElementById('dplayer'),
-    live: true,
-    screenshot: true,
-    video: {
-      {
-      url: 'https://stream.chenbx.eu.org/__defaultApp__/livestream.flv',
-      type: 'flv',
-    },
-	  
-      defaultQuality: 0,
-      pic: 'https://cdn13.mudu.tv/assets/upload/159885807530963.jpg',
-  },
-  })
-</script>
-
-<mdui-list>
+  <header class="mdui-appbar mdui-appbar-fixed">
+    <div class="mdui-toolbar mdui-color-theme">
+      <a href="/" class="mdui-btn mdui-btn-icon" aria-label="首页">
+        <i class="mdui-icon material-icons">live_tv</i>
+      </a>
+      <span class="mdui-typo-title">顺北广播电视总台 <mdui-badge variant="large">Beta</mdui-badge></span>
+      <div class="mdui-toolbar-spacer"></div>
+      <a href="https://chenbx.eu.org" class="mdui-btn mdui-btn-icon" aria-label="官方网站">
+        <i class="mdui-icon material-icons">home</i>
+      </a>
+    </div>
+  </header>
+  <main>
+    <div id="mse"></div>
     <mdui-collapse accordion>
-        <mdui-collapse-item>
-          <mdui-list-item slot="header" icon="chat">讨论区</mdui-list-item>
-<script src="https://giscus.app/client.js"
-        data-repo="chenbx233/Public"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkzMDMxMTA5OTg="
-        data-category="Announcements"
-        data-category-id="DIC_kwDOEhEbVs4CcaJO"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
-</mdui-list>
+      <mdui-collapse-item>
+        <mdui-list-item slot="header" icon="chat">讨论区</mdui-list-item>
+        <div slot="content" class="discussion-container">
+          <div id="giscus-container"></div>
+          <script src="https://giscus.app/client.js"
+            data-repo="chenbx233/Public"
+            data-repo-id="MDEwOlJlcG9zaXRvcnkzMDMxMTA5OTg="
+            data-category="Announcements"
+            data-category-id="DIC_kwDOEhEbVs4CcaJO"
+            data-mapping="url"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="preferred_color_scheme"
+            data-lang="zh-CN"
+            crossorigin="anonymous"
+            async>
+          </script>
+        </div>
+      </mdui-collapse-item>
+    </mdui-collapse>
+  </main>
+  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/js/mdui.min.js"></script>
+  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/flv.js/1.6.2/flv.min.js"></script>
+  <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/hls.js/8.0.0-beta.3/hls.min.js"></script>
+  <script src="https://unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js" charset="utf-8"></script>
+  <script src="https://unpkg.byted-static.com/xgplayer-flv/2.5.1/dist/index.min.js" charset="utf-8"></script>
+  <script>
+    const player = new FlvPlayer({
+      id: 'mse',
+      url: 'https://stream.chenbx.eu.org/__defaultApp__/livestream.flv',
+      isLive: true,
+      playsinline: true,
+      height: '70vh', // 播放器高度占屏幕的70%
+      width: '100%'
+    });
+    player.emit('resourceReady', [{ name: 'HLS', url: 'http://stream.chenbx.eu.org/__defaultApp__/livestream.m3u8' }]);
+  </script>
 </body>
+</html>
