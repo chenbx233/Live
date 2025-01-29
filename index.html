@@ -116,15 +116,15 @@
   <script src="https://unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js" charset="utf-8"></script>
   <script src="https://unpkg.byted-static.com/xgplayer-hls.js/2.2.2/dist/index.min.js" charset="utf-8"></script>
   <script>
-    const player = new HlsJsPlayer({
+      let player = new HlsJsPlayer({
       id: 'mse',
-      url: '//stream.chenbx.eu.org/live/livestream.m3u8',
+      url: 'http://stream.chenbx.eu.org/live/livestream.m3u8',
       isLive: true,
       playsinline: true, // 确保播放器在小屏幕上不全屏
       height: '70vh', // 播放器高度占屏幕的70%
       width: '100%',
       fullscreen: false, // 禁用全屏模式
-      autoplay: false, // 禁用自动播放
+      autoplay: true, // 禁用自动播放
       controls: true, // 显示控制条
       fluid: false, // 禁用流体布局
       fitVideoSize: 'autoFitToWindow' // 自适应窗口大小
