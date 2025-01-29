@@ -114,17 +114,17 @@
   <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/flv.js/1.6.2/flv.min.js"></script>
   <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/hls.js/8.0.0-beta.3/hls.min.js"></script>
   <script src="https://unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js" charset="utf-8"></script>
-  <script src="https://unpkg.byted-static.com/xgplayer-hls.js/2.2.2/dist/index.min.js" charset="utf-8"></script>
+  <script src="https://unpkg.byted-static.com/xgplayer-flv/2.5.1/dist/index.min.js" charset="utf-8"></script>
   <script>
-      let player = new HlsJsPlayer({
+    const player = new FlvPlayer({
       id: 'mse',
-      url: 'http://stream.chenbx.eu.org/live/livestream.m3u8',
+      url: '//stream.chenbx.eu.org/live/livestream.flv',
       isLive: true,
       playsinline: true, // 确保播放器在小屏幕上不全屏
       height: '70vh', // 播放器高度占屏幕的70%
       width: '100%',
       fullscreen: false, // 禁用全屏模式
-      autoplay: true, // 禁用自动播放
+      autoplay: false, // 禁用自动播放
       controls: true, // 显示控制条
       fluid: false, // 禁用流体布局
       fitVideoSize: 'autoFitToWindow' // 自适应窗口大小
