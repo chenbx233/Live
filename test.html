@@ -113,47 +113,84 @@
   <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/js/mdui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dplayer@latest/dist/DPlayer.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer@latest/dist/DPlayer.min.css">
+  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/flv.js/1.6.2/flv.min.js"></script>
+  <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/hls.js/8.0.0-beta.3/hls.min.js"></script>
   <script>
     try {
-      const dp = new DPlayer({
-        container: document.getElementById('mse'),
-        video: {
+      const videoSources = [
+        {
+          name: 'HLS',
           url: 'http://stream.chenbx.eu.org/live/livestream.m3u8',
           type: 'hls'
         },
-        live: true,
-        autoplay: false, // 修改为false以禁用自动播放
-        theme: '#FADFA3',
-        loop: false,
-        screenshot: false,
-        hotkey: true,
-        preload: 'metadata',
-        volume: 0.7,
-        mutex: true,
-        lang: 'zh-cn',
-        airplay: true,
-        logo: '',
-        fluid: false,
-        customType: {
-          hls: function(video, player) {
-            const hls = new Hls();
-            hls.loadSource(video.src);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-              video.play();
-            });
-          }
+        {
+          name: 'FLV',
+          url: 'http://stream.chenbx.eu.org/live/livestream.flv',
+          type: 'flv'
         }
-      });
+      ];
 
-      // 确保播放器在点击播放按钮时不全屏
-      document.getElementById('mse').addEventListener('click', function() {
-        if (dp.video.requestFullscreen) {
-          dp.video.requestFullscreen();
-        } else if (dp.video.webkitRequestFullscreen) {
-          dp.video.webkitRequestFullscreen();
-        } else if (dp.video.msRequestFullscreen) {
-          dp.video.msRequestFullscreen();
+      let dp;
+
+      function initPlayer(sourceIndex) {
+        if (dp) {
+          dp.destroy();
+        }
+
+        const source = videoSources[sourceIndex];
+
+        dp = new DPlayer({
+          container: document.getElementById('mse'),
+          video: {
+            quality: [{
+              name: source.name,
+              url: source.url,
+              type: source.type
+            }],
+            defaultQuality: 0
+          },
+          live: true,
+          autoplay: false, // 修改为false以禁用自动播放
+          theme: '#FADFA3',
+          loop: false,
+          screenshot: false,
+          hotkey: true,
+          preload: 'metadata',
+          volume: 0.7,
+          mutex: true,
+          lang: 'zh-cn',
+          airplay: true,
+          logo: '',
+          fluid: false,
+          customType: {
+            hls: function(video, player) {
+              const hls = new Hls();
+              hls.loadSource(video.src);
+              hls.attachMedia(video);
+              hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+              });
+            },
+            flv: function(video, player) {
+              const flvPlayer = flvjs.createPlayer({
+                type: 'flv',
+                url: video.src
+              });
+              flvPlayer.attachMediaElement(video);
+              flvPlayer.load();
+              flvPlayer.play();
+            }
+          }
+        });
+
+      // 初始化默认播放器
+      initPlayer(0);
+
+      // 监听质量变化
+      dp.on('quality_start', function(quality) {
+        const sourceIndex = videoSources.findIndex(src => src.name === quality.name);
+        if (sourceIndex !== -1) {
+          initPlayer(sourceIndex);
         }
       });
     } catch (error) {
