@@ -8,9 +8,11 @@
   <meta name="keywords" content="顺北广播电视, 在线直播, 高清视频">
   <title>顺北广播电视总台</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <!-- 优先加载mdui样式，避免样式闪烁 -->
   <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/css/mdui.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
+    /* 全局样式重置与基础布局 */
     html, body {
       width: 100%;
       height: 100%;
@@ -18,81 +20,112 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      background-color: #f5f5f5; /* 增加页面背景色，提升视觉体验 */
     }
-    header {
-      z-index: 1000; /* 确保顶栏始终在最上方 */
+
+    /* 顶栏优化：利用mdui原生样式，避免冲突 */
+    header.mdui-appbar {
+      z-index: 1000;
       position: fixed;
-      width: 100%;
       top: 0;
       left: 0;
-      background: #fff; /* 确保顶栏背景颜色 */
+      right: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 增加阴影，提升层次感 */
     }
+
+    /* 主内容区域：解决顶栏遮挡问题 */
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 20px; /* 给主内容区域添加边距 */
-      padding-top: 56px; /* 顶栏高度 */
       box-sizing: border-box;
+      padding: 0 16px; /* 统一边距，适配移动端 */
+      padding-top: 64px; /* 适配mdui appbar高度，避免内容遮挡 */
+      overflow: hidden; /* 防止整体滚动 */
     }
+
+    /* 播放器容器：核心布局优化 */
     #mse {
       flex: 1;
-      position: relative;
-      z-index: 1;
-      height: 70vh; /* 播放器高度占屏幕的70% */
+      min-height: 0; /* 解决flex布局下高度溢出问题 */
+      border-radius: 8px; /* 增加圆角，提升美观度 */
+      overflow: hidden;
+      background-color: #000; /* 直播加载前显示黑色背景 */
+      margin-bottom: 16px; /* 与讨论区拉开间距 */
     }
+
+    /* 讨论区容器：优化滚动和边距 */
     .discussion-container {
       flex: 1;
-      overflow-y: auto; /* 允许讨论区滚动 */
-      margin: 0 20%; /* 左右边距 */
+      overflow-y: auto;
+      margin: 0; /* 移除过大的左右边距，保证小屏显示完整 */
+      padding: 0 8px; /* 内部边距替代外部margin */
+      border-radius: 8px;
+      background-color: #fff; /* 白色背景，区分讨论区 */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    /* 桌面版布局 */
+    /* 自定义滚动条：提升移动端体验 */
+    .discussion-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    .discussion-container::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 2px;
+    }
+
+    /* 桌面版布局（768px以上） */
     @media (min-width: 768px) {
       main {
-        flex-direction: column; /* 垂直布局 */
+        padding: 0 24px;
+        padding-top: 64px;
       }
       #mse {
-        height: 70vh; /* 播放器高度占屏幕的70% */
+        height: 70vh; /* 桌面端播放器占70%视口高度 */
       }
       .discussion-container {
-        height: 30vh; /* 讨论区高度占屏幕的30% */
+        height: 30vh; /* 桌面端讨论区占30%视口高度 */
+        margin: 0 auto;
+        max-width: 1200px; /* 限制讨论区最大宽度 */
       }
     }
 
-    /* 移动版布局 */
+    /* 移动版布局（767px以下） */
     @media (max-width: 767px) {
-      main {
-        padding: 10px; /* 小屏幕设备上的边距 */
-        padding-top: 56px; /* 顶栏高度 */
-      }
       #mse {
-        height: 60vh; /* 小屏幕设备上播放器高度占屏幕的60% */
+        height: 55vh; /* 移动端降低播放器高度，保证讨论区可见 */
       }
       .discussion-container {
-        height: 40vh; /* 小屏幕设备上讨论区高度占屏幕的40% */
-        margin: 0 10%; /* 小屏幕设备上的左右边距 */
+        height: 45vh; /* 移动端提升讨论区占比 */
       }
     }
   </style>
 </head>
 <body>
+  <!-- 顶栏：修复mdui badge的错误写法 -->
   <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
       <a href="/" class="mdui-btn mdui-btn-icon" aria-label="首页">
         <i class="mdui-icon material-icons">live_tv</i>
       </a>
-      <span class="mdui-typo-title">顺北广播电视总台 <mdui-badge variant="large">Beta</mdui-badge></span>
+      <span class="mdui-typo-title">
+        顺北广播电视总台 
+        <span class="mdui-badge mdui-badge-lg mdui-badge-color-red">Beta</span>
+      </span>
       <div class="mdui-toolbar-spacer"></div>
       <a href="https://chenbx.eu.org" class="mdui-btn mdui-btn-icon" aria-label="官方网站">
         <i class="mdui-icon material-icons">home</i>
       </a>
     </div>
   </header>
+
   <main>
+    <!-- 播放器容器 -->
     <div id="mse"></div>
+    <!-- 讨论区容器 -->
     <div class="discussion-container">
       <div id="giscus-container"></div>
+      <!-- Giscus 评论组件 -->
       <script src="https://giscus.app/client.js"
         data-repo="chenbx233/Public"
         data-repo-id="MDEwOlJlcG9zaXRvcnkzMDMxMTA5OTg="
@@ -110,29 +143,73 @@
       </script>
     </div>
   </main>
+
+  <!-- 脚本加载：移至body底部，避免阻塞渲染 -->
   <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/js/mdui.min.js"></script>
   <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/flv.js/1.6.2/flv.min.js"></script>
   <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/hls.js/8.0.0-beta.3/hls.min.js"></script>
   <script src="https://unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js" charset="utf-8"></script>
   <script src="https://unpkg.byted-static.com/xgplayer-flv/2.5.1/dist/index.min.js" charset="utf-8"></script>
+
   <script>
-    const player = new FlvPlayer({
-      id: 'mse',
-      url: '//stream.chenbx.eu.org/live/livestream.flv',
-      isLive: true,
-      playsinline: true, // 确保播放器在小屏幕上不全屏
-      height: '70vh', // 播放器高度占屏幕的70%
-      width: '100%',
-      fullscreen: false, // 禁用全屏模式
-      autoplay: false, // 禁用自动播放
-      controls: true, // 显示控制条
-      fluid: false, // 禁用流体布局
-      fitVideoSize: 'autoFitToWindow' // 自适应窗口大小
-    });
-    // 确保播放器在点击播放按钮时不全屏
-    document.getElementById('mse').addEventListener('click', function() {
-      if (player.isFullscreen()) {
-        player.exitFullscreen();
+    // 确保DOM加载完成后初始化播放器，避免元素未找到
+    document.addEventListener('DOMContentLoaded', function() {
+      // 播放器配置：优化兼容性和稳定性
+      const playerOptions = {
+        id: 'mse',
+        url: '//stream.chenbx.eu.org/live/livestream.flv',
+        isLive: true,
+        playsinline: true, // 移动端内联播放，不自动全屏
+        width: '100%',
+        height: '100%',
+        fullscreen: {
+          disable: true // 彻底禁用全屏功能，替代原点击判断逻辑
+        },
+        autoplay: false, // 禁用自动播放（如需自动播放，需添加muted: true）
+        controls: true, // 显示控制条
+        fluid: true, // 启用流体布局，适配容器大小
+        fitVideoSize: 'contain', // 视频保持比例，不拉伸
+        volume: 0.7, // 默认音量
+        // 增加直播加载提示
+        loading: {
+          text: '正在加载直播流...'
+        }
+      };
+
+      // 初始化FLV播放器
+      let player;
+      try {
+        player = new FlvPlayer(playerOptions);
+        console.log('播放器初始化成功');
+
+        // 播放错误监听：提示用户排查问题
+        player.on('error', function(err) {
+          console.error('播放器错误：', err);
+          mdui.snackbar({
+            message: '直播流加载失败，请稍后重试',
+            position: 'bottom',
+            timeout: 5000
+          });
+        });
+
+        // 直播状态监听
+        player.on('liveInfo', function(info) {
+          console.log('直播信息：', info);
+        });
+
+        // 页面销毁时释放播放器资源
+        window.addEventListener('beforeunload', function() {
+          if (player) {
+            player.destroy();
+          }
+        });
+      } catch (e) {
+        console.error('播放器初始化失败：', e);
+        mdui.snackbar({
+          message: '播放器初始化失败，请检查网络或浏览器版本',
+          position: 'bottom',
+          timeout: 5000
+        });
       }
     });
   </script>
