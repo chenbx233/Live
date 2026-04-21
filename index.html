@@ -9,7 +9,7 @@
   <title>顺北广播电视总台</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <!-- 优先加载mdui样式，避免样式闪烁 -->
-  <link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/css/mdui.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     /* 全局样式重置与基础布局 */
@@ -42,6 +42,7 @@
       padding: 0 16px; /* 统一边距，适配移动端 */
       padding-top: 64px; /* 适配mdui appbar高度，避免内容遮挡 */
       overflow: hidden; /* 防止整体滚动 */
+      height: 100vh;
     }
 
     /* 播放器容器：核心布局优化 */
@@ -63,6 +64,7 @@
       border-radius: 8px;
       background-color: #fff; /* 白色背景，区分讨论区 */
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      min-height: 200px;
     }
 
     /* 自定义滚动条：提升移动端体验 */
@@ -74,23 +76,77 @@
       border-radius: 2px;
     }
 
-    /* 桌面版布局（768px以上） */
-    @media (min-width: 768px) {
+    /* 桌面版布局（1020px以上）- 上下分布 */
+    @media (min-width: 1020px) {
       main {
-        padding: 0 24px;
-        padding-top: 64px;
+        padding: 24px;
+        padding-top: 80px;
+        flex-direction: column;
+        gap: 20px;
+        height: calc(100vh - 80px);
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
       }
       #mse {
-        height: 70vh; /* 桌面端播放器占70%视口高度 */
+        flex: 2;
+        min-height: 500px;
+        margin-bottom: 0;
+        background-color: #000;
+        border-radius: 8px;
       }
       .discussion-container {
-        height: 30vh; /* 桌面端讨论区占30%视口高度 */
-        margin: 0 auto;
-        max-width: 1200px; /* 限制讨论区最大宽度 */
+        flex: 1;
+        min-height: 300px;
+        margin: 0;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
     }
 
-    /* 移动版布局（767px以下） */
+    /* 大屏平板布局（900px-1019px）- 上下分布，调整比例 */
+    @media (min-width: 900px) and (max-width: 1019px) {
+      main {
+        padding: 0 24px;
+        padding-top: 64px;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+      #mse {
+        height: 60vh; /* 平板端播放器占60%视口高度 */
+        min-height: 400px;
+      }
+      .discussion-container {
+        height: 40vh; /* 平板端讨论区占40%视口高度 */
+        min-height: 300px;
+        margin: 0;
+        max-width: none;
+      }
+    }
+
+    /* 小屏平板布局（768px-899px）- 上下分布，调整比例 */
+    @media (min-width: 768px) and (max-width: 899px) {
+      main {
+        padding: 0 24px;
+        padding-top: 64px;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+      #mse {
+        height: 55vh; /* 小屏平板播放器占55%视口高度 */
+        min-height: 350px;
+      }
+      .discussion-container {
+        height: 45vh; /* 小屏平板讨论区占45%视口高度 */
+        min-height: 250px;
+        margin: 0;
+        max-width: none;
+      }
+    }
+
+    /* 移动版布局（767px以下）- 上下分布 */
     @media (max-width: 767px) {
       #mse {
         height: 55vh; /* 移动端降低播放器高度，保证讨论区可见 */
@@ -105,17 +161,13 @@
   <!-- 顶栏：修复mdui badge的错误写法 -->
   <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
-      <a href="/" class="mdui-btn mdui-btn-icon" aria-label="首页">
+      <a href="https://chenbx.eu.org" class="mdui-btn mdui-btn-icon" aria-label="官方网站">
         <i class="mdui-icon material-icons">live_tv</i>
       </a>
       <span class="mdui-typo-title">
         顺北广播电视总台 
         <span class="mdui-badge mdui-badge-lg mdui-badge-color-red">Beta</span>
       </span>
-      <div class="mdui-toolbar-spacer"></div>
-      <a href="https://chenbx.eu.org" class="mdui-btn mdui-btn-icon" aria-label="官方网站">
-        <i class="mdui-icon material-icons">home</i>
-      </a>
     </div>
   </header>
 
@@ -124,20 +176,11 @@
     <div id="mse"></div>
     <!-- 讨论区容器 -->
     <div class="discussion-container">
-      <div id="giscus-container"></div>
-      <!-- Giscus 评论组件 -->
-      <script src="https://giscus.app/client.js"
-        data-repo="chenbx233/Public"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkzMDMxMTA5OTg="
-        data-category="Announcements"
-        data-category-id="DIC_kwDOEhEbVs4CcaJO"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
+      <!-- Utterances 评论组件 -->
+      <script src="https://utteranc.es/client.js"
+        repo="chenbx233/Live"
+        issue-term="pathname"
+        theme="github-light"
         crossorigin="anonymous"
         async>
       </script>
@@ -145,13 +188,44 @@
   </main>
 
   <!-- 脚本加载：移至body底部，避免阻塞渲染 -->
-  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mdui/1.0.2/js/mdui.min.js"></script>
-  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/flv.js/1.6.2/flv.min.js"></script>
-  <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/hls.js/8.0.0-beta.3/hls.min.js"></script>
-  <script src="https://unpkg.byted-static.com/xgplayer/2.31.2/browser/index.js" charset="utf-8"></script>
-  <script src="https://unpkg.byted-static.com/xgplayer-flv/2.5.1/dist/index.min.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flv.js@1.6.2/dist/flv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xgplayer@2.31.2/browser/index.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xgplayer-flv@2.5.1/dist/index.min.js" charset="utf-8"></script>
 
   <script>
+    // 全局错误处理
+    window.addEventListener('error', function(event) {
+      if (event.target.tagName === 'SCRIPT') {
+        console.error('脚本加载失败：', event.target.src);
+        if (event.target.src.includes('mdui')) {
+          mdui.snackbar({
+            message: 'UI库加载失败，部分功能可能受限',
+            position: 'bottom',
+            timeout: 5000
+          });
+        }
+      }
+    });
+
+    // 网络状态检测
+    window.addEventListener('online', function() {
+      mdui.snackbar({
+        message: '网络已连接',
+        position: 'bottom',
+        timeout: 3000
+      });
+    });
+
+    window.addEventListener('offline', function() {
+      mdui.snackbar({
+        message: '网络连接已断开',
+        position: 'bottom',
+        timeout: 5000
+      });
+    });
+
     // 确保DOM加载完成后初始化播放器，避免元素未找到
     document.addEventListener('DOMContentLoaded', function() {
       // 播放器配置：优化兼容性和稳定性
@@ -179,6 +253,11 @@
       // 初始化FLV播放器
       let player;
       try {
+        // 检查 FlvPlayer 是否存在
+        if (typeof FlvPlayer === 'undefined') {
+          throw new Error('FlvPlayer 未定义，请检查播放器库是否加载成功');
+        }
+        
         player = new FlvPlayer(playerOptions);
         console.log('播放器初始化成功');
 
@@ -205,10 +284,20 @@
         });
       } catch (e) {
         console.error('播放器初始化失败：', e);
-        mdui.snackbar({
-          message: '播放器初始化失败，请检查网络或浏览器版本',
-          position: 'bottom',
-          timeout: 5000
+        // 降级方案：显示错误信息和重试按钮
+        const mseContainer = document.getElementById('mse');
+        mseContainer.innerHTML = `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #fff; text-align: center; padding: 20px;">
+            <i class="mdui-icon material-icons" style="font-size: 48px; margin-bottom: 16px;">error_outline</i>
+            <h3>播放器加载失败</h3>
+            <p style="margin: 16px 0;">${e.message || '请检查网络连接或浏览器版本'}</p>
+            <button id="retry-btn" class="mdui-btn mdui-btn-raised mdui-color-theme">重新加载</button>
+          </div>
+        `;
+        
+        // 重新加载按钮事件
+        document.getElementById('retry-btn').addEventListener('click', function() {
+          location.reload();
         });
       }
     });
