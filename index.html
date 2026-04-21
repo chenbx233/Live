@@ -200,30 +200,48 @@
       if (event.target.tagName === 'SCRIPT') {
         console.error('脚本加载失败：', event.target.src);
         if (event.target.src.includes('mdui')) {
-          mdui.snackbar({
-            message: 'UI库加载失败，部分功能可能受限',
-            position: 'bottom',
-            timeout: 5000
-          });
+          // 添加mdui库存在性检查
+          if (typeof mdui !== 'undefined' && mdui.snackbar) {
+            mdui.snackbar({
+              message: 'UI库加载失败，部分功能可能受限',
+              position: 'bottom',
+              timeout: 5000
+            });
+          } else {
+            // 降级方案：使用原生alert
+            alert('UI库加载失败，部分功能可能受限');
+          }
         }
       }
     });
 
     // 网络状态检测
     window.addEventListener('online', function() {
-      mdui.snackbar({
-        message: '网络已连接',
-        position: 'bottom',
-        timeout: 3000
-      });
+      // 添加mdui库存在性检查
+      if (typeof mdui !== 'undefined' && mdui.snackbar) {
+        mdui.snackbar({
+          message: '网络已连接',
+          position: 'bottom',
+          timeout: 3000
+        });
+      } else {
+        // 降级方案：使用原生alert
+        console.log('网络已连接');
+      }
     });
 
     window.addEventListener('offline', function() {
-      mdui.snackbar({
-        message: '网络连接已断开',
-        position: 'bottom',
-        timeout: 5000
-      });
+      // 添加mdui库存在性检查
+      if (typeof mdui !== 'undefined' && mdui.snackbar) {
+        mdui.snackbar({
+          message: '网络连接已断开',
+          position: 'bottom',
+          timeout: 5000
+        });
+      } else {
+        // 降级方案：使用原生alert
+        alert('网络连接已断开');
+      }
     });
 
     // 确保DOM加载完成后初始化播放器，避免元素未找到
